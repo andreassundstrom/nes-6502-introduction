@@ -2,7 +2,13 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"label": "pre-build",
+			"type":"shell",
+			"command":"ni -ItemType Directory -Force -Path bin"
+		},
+		{
 			"type": "ca65",
+			"dependsOn": "pre-build",
 			"problemMatcher": [
 				"$ca65",
 				"$ld65",
@@ -13,7 +19,16 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"label": "ca65: Build without config"
+			"label": "ca65: Build without config",
+		},
+		{
+			"type": "process",
+			"command": "C:\\Program Files\\fceux-2.6.6\\fceux64.exe",
+			"label": "fceux64: run rom",
+			"args": [
+				"bin/nes-introduction.rom"
+			],
+			"problemMatcher": []
 		}
 	]
 }

@@ -36,3 +36,11 @@ When addressing memory outside of the first 256 bytes absolute addressing is req
 ```
 stx $030F
 ```
+
+## Indexed memory operation
+
+```
+STA $1000,X
+```
+
+Store valu in the acumilator at address `$1000` but with an ofset of the value stored at `X`.
