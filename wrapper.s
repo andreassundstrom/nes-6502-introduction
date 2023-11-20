@@ -85,19 +85,29 @@ nmi:
   lda hello, x 	; Load the hello message into SPR-RAM
   sta $2004
   inx
-  cpx #$28
+  cpx #$44
   bne @loop
   rti
 
 hello:
-  .byte $6c, $06, $00, $62 ; Hjärta
-  .byte $6c, $00, $00, $6c
-  .byte $6c, $01, $00, $76
-  .byte $6c, $02, $00, $80
-  .byte $6c, $03, $00, $8A
-  .byte $6c, $04, $00, $94
-  .byte $6c, $05, $00, $9E
-  .byte $6c, $06, $00, $A8 ; Hjärta
+  ; y, tecken, ?, x
+  .byte $6c, $08, $00, $62 ; Heart
+  .byte $6c, $00, $00, $6c ; A
+  .byte $6c, $01, $00, $76 ; L
+  .byte $6c, $02, $00, $80 ; F
+  .byte $6c, $03, $00, $8A ; R
+  .byte $6c, $04, $00, $94 ; E
+  .byte $6c, $05, $00, $9E ; D
+  .byte $6c, $08, $00, $A8 ; Heart
+
+  .byte $76, $08, $00, $62 ; Heart
+  .byte $76, $06, $00, $6c ; S
+  .byte $76, $04, $00, $76 ; E
+  .byte $76, $01, $00, $80 ; L
+  .byte $76, $07, $00, $8A ; M
+  .byte $76, $00, $00, $94 ; A
+  .byte $76, $08, $00, $9E ; Heart
+
 
 palettes:
   ; Background Palette
@@ -107,7 +117,9 @@ palettes:
   .byte $0f, $00, $00, $00
 
   ; Sprite Palette
-  .byte $0f, $20, $00, $00
+  ; Position 0 är transparant
+  ; Position 1 - 3 är färger
+  .byte $0f, $20, $15, $00
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
@@ -174,7 +186,27 @@ palettes:
   .byte %11111100
   .byte $00, $00, $00, $00, $00, $00, $00, $00
 
-  ; Hjärta (06)
+  .byte %01111111 ; S (06)
+  .byte %11111111
+  .byte %11000000
+  .byte %11111110
+  .byte %00111111
+  .byte %00000011
+  .byte %11111111
+  .byte %11111110
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  .byte %11100111 ; M (07)
+  .byte %11100111
+  .byte %11100111
+  .byte %11111111
+  .byte %11011011
+  .byte %11011011
+  .byte %11000011
+  .byte %11000011
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  ; Hjärta (08)
   .byte %01100110	;  **  **
   .byte %10011001 ; *  **  *
   .byte %10000001 ; *      *
@@ -183,4 +215,12 @@ palettes:
   .byte %01000010 ;  *    *
   .byte %00100100 ;   *  *
   .byte %00011000 ;    **
-  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  .byte %00000000	;  **  **
+  .byte %01100110 ; *  **  *
+  .byte %01111110 ; *      *
+  .byte %01111110 ; *      *
+  .byte %01111110 ; *      *
+  .byte %00111100 ;  *    *
+  .byte %00011000 ;   *  *
+  .byte %00000000 ;    **
