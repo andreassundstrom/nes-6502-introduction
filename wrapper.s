@@ -1,3 +1,5 @@
+.import Main
+
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
   .byte $4E, $45, $53, $1A
@@ -31,6 +33,11 @@ reset:
   stx $2001 	; disable rendering
   stx $4010 	; disable DMC IRQs
 
+
+  ; some stuff
+  ldx #1;
+  stx $00;
+
 ;; first wait for vblank to make sure PPU is ready
 vblankwait1:
   bit $2002
@@ -56,12 +63,12 @@ vblankwait2:
 
 main:
 load_palettes:
-  lda $2002
-  lda #$3f
-  sta $2006
-  lda #$00
-  sta $2006
-  ldx #$00
+  lda $2002 ; Load A with value at $2002
+  lda #$3f  ; Load A with value $3f
+  sta $2006 ; Store the value at a in $2006
+  lda #$00  ; Load A with value 0
+  sta $2006 ; Store A in $2006
+  ldx #$00  ; Reset x, begin loop
 @loop:
   lda palettes, x
   sta $2007
@@ -76,17 +83,48 @@ enable_rendering:
   sta $2001
 
 forever:
+  jsr Main
   jmp forever
-
 nmi:
+
+
   ldx #$00 	; Set SPR-RAM address to 0
   stx $2003
-@loop:	
-  lda hello, x 	; Load the hello message into SPR-RAM
-  sta $2004
-  inx
-  cpx #$44
-  bne @loop
+
+  ; Moving heart
+  lda #$10    ; Set Y-pos
+  sta $2004   ; Write Y-pos
+
+  lda #$08    ; Set sprite (heart)
+  sta $2004   ; Store sprite
+  
+  lda #$00    ; Set attributes
+  sta $2004   ; Store attributes
+  
+  lda $02     ; Load X from memory $01
+  sta $2004   ; Store X
+
+  ; Moving heart
+  lda #$20    ; Set Y-pos
+  sta $2004   ; Write Y-pos
+
+  lda #$08    ; Set sprite (heart)
+  sta $2004   ; Store sprite
+  
+  lda #$00    ; Set attributes
+  sta $2004   ; Store attributes
+  
+  lda $03     ; Load X from memory $01
+  sta $2004   ; Store X
+
+  @loop:	
+    lda hello, x 	; Load the text message into SPR-RAM
+    sta $2004
+    inx
+    ; Compare value in x to 44, store results
+    ; in negative, zero and carry status registries
+    cpx #$44 
+    bne @loop ; Branch on result not zero, z = 0
   rti
 
 hello:
@@ -117,8 +155,8 @@ palettes:
   .byte $0f, $00, $00, $00
 
   ; Sprite Palette
-  ; Position 0 är transparant
-  ; Position 1 - 3 är färger
+  ; Position 0 is transparent
+  ; Position 1 - 3 are colors
   .byte $0f, $20, $15, $00
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00

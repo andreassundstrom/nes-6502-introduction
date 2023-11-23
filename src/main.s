@@ -2,24 +2,23 @@
 .segment "CODE"
 
 .proc Main
-  ; Load 5 into x and y registers
-  ldx #5;
-  ldy #5;
-
-  ; Increment X twice
+  
+  ldx $01
   inx
-  inx
+  stx $01
 
-  ; Decrement x once
+  cpx #$00
+  ; if $01 == 0 goto return
+  bne @return
+
+  ldx $02
+  inx
+  stx $02
+
+  ldx $03
   dex
+  stx $03
 
-  ; Decrement Y twice
-  dey
-  dey
-
-  ; Increment Y once
-  iny
-
-  ; return
-  rts
+  @return:
+    rts
 .endproc
