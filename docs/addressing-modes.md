@@ -1,5 +1,18 @@
 # Address modes
 
+## Specifying numbers
+
+### 16-bit mode
+
+Consider the decimal number 450. To represent it two bytes are needed (`0000 0100 0101 0000`). Since the nes only can handle one byte at a time, storing the number would require splitting it in two parts.
+
+```asm
+lda #>450 ; Load high byte of 450
+sta $01   ; Store in $01
+lda #<450 ; Load low byte of 450
+sta $00   ; Store in $00
+```
+
 ## Immediate addressing
 
 Use a hash symbol (#) to the right of the instruction. This denotes the immediate value.

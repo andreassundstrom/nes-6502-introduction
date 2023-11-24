@@ -1,3 +1,7 @@
+heart_1_pos_x = $02
+heart_2_pos_x = $03
+
+.import Sound
 .export Main
 .segment "CODE"
 
@@ -11,13 +15,15 @@
   ; if $01 == 0 goto return
   bne @return
 
-  ldx $02
-  inx
-  stx $02
 
-  ldx $03
+  ldx heart_1_pos_x
+  inx
+  stx heart_1_pos_x
+
+  ldx heart_2_pos_x
   dex
-  stx $03
+  stx heart_2_pos_x
+
 
   @return:
     rts

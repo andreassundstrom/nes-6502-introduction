@@ -1,4 +1,10 @@
+.import Sound
+.import InitApu
 .import Main
+
+; Memory addresses
+heart_1_pos_x = $02
+heart_2_pos_x = $03
 
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
@@ -82,9 +88,15 @@ enable_rendering:
   lda #%00010000	; Enable Sprites
   sta $2001
 
+  jsr InitApu
+  jsr Sound
+  
 forever:
   jsr Main
+
   jmp forever
+
+
 nmi:
 
 
