@@ -154,14 +154,12 @@ hello:
 
 palettes:
   ; Background Palette
-  .byte $0f, $00, $00, $00
+  .byte $0f, $09, $19, $2a
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
 
   ; Sprite Palette
-  ; Position 0 is transparent
-  ; Position 1 - 3 are colors
   .byte $0f, $20, $15, $00
   .byte $0f, $04, $20, $14
   .byte $0f, $00, $00, $00
