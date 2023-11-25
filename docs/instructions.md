@@ -11,8 +11,10 @@ The 6502 has a special register with processor status flags. Instructions will a
 | N    | Negative |
 | V    | Overflow |
 
-- **Negative**: After instructions that have result, set if result is negative
+- **Carry**:
+  - **Bitshift**: (ASL, LSR, ROL, ROR): Containts the bit that was shifted out
 - **Zero**: After instructions that have result, will be set if result is zero
+- **Negative**: After instructions that have result, set if result is negative
 
 Complete list with [instructions](https://www.masswerk.at/6502/6502_instruction_set.html).
 
@@ -43,6 +45,27 @@ while (y > 0) {
 }
 ```
 
+`BCC`: **B**ranch on **C**arry **Clear** (C = 0)
+
+In bitshift operations thils will branch if the shifted bit is 0.
+
+```asm
+  lda #%10000000  ; Load value 1000 0000 into a
+  lsr a           ; Shift value a right
+                  ; A = 0100 0000
+                  ; The shifted bit is = 0
+  bcc something   ; Will jump since above instruction cleard c
+```
+
+`BCS`: **B**ranch on **C**arry **S**et (C = 1)
+
+```asm
+  lda #%00000001  ; Load value 0000 0001 into a
+  lsr a           ; Shift value a right
+                  ; The shifted bit is in C
+  bcs             ; Since shifted bit is set, will jump
+```
+
 ## Loading and storing to/from registries
 
 Basic loading of the registries `A`, `X` and `Y` is done with the `LD{A|X|Y}` instruction.
@@ -54,3 +77,30 @@ Basic storing of the registries can be done with `ST{A|X|Y}`.
 `IN{X|Y}` and `DE{X|Y}` can be used to increment or decrement the value in the registries. This is useful for loops.
 
 ## Compare memory and registry
+
+## Bitshiftoperations
+
+### LSR (memory or accumilator)
+
+Shift one bit right. The shifted bit will be stored
+in the `C`arry flag.
+
+```asm
+sta #%10000001  ; A contains 1000 0001
+lsr a           ; Shift one bit right
+                ; A contains 0100 0000
+                ; C containts the shifted bit 1
+```
+
+### ROL (rotate one bit left)
+
+Shift all bits left. The new bit will be taken from the
+`C`arry flag. The shifted bit will be stored in the `C`arry
+flag.
+
+```asm
+sta #%10101010  ; The value 0101 0101, C contains 1
+rol a           ; Shift all numbers left
+                ; A should contain 0101 0101
+                ; C should be set to 1
+```

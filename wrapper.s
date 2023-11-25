@@ -1,10 +1,13 @@
 .import Sound
+.import ReadController
 .import InitApu
 .import Main
 
 ; Memory addresses
 heart_1_pos_x = $02
 heart_2_pos_x = $03
+
+JOYPAD_1 = $4016
 
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
@@ -93,6 +96,7 @@ enable_rendering:
   
 forever:
   jsr Main
+  jsr ReadController
 
   jmp forever
 
