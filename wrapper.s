@@ -7,6 +7,7 @@
 JOYPAD_1 = $4016
 heart_1_pos_x = $02
 heart_1_pos_y = $03
+morran_direction = $04
 
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
@@ -110,10 +111,12 @@ nmi:
   lda heart_1_pos_y    ; Set Y-pos
   sta $2004   ; Write Y-pos
 
-  lda #$08    ; Set sprite (heart)
+  lda #$09    ; Set sprite (heart)
   sta $2004   ; Store sprite
   
-  lda #$00    ; Set attributes
+  lda #%00000001        ; Set attributes
+  ora morran_direction  ; V-flip
+
   sta $2004   ; Store attributes
   
   lda heart_1_pos_x ; Load X from memory $01
@@ -160,7 +163,7 @@ palettes:
   ; Position 0 is transparent
   ; Position 1 - 3 are colors
   .byte $0f, $20, $15, $00
-  .byte $0f, $00, $00, $00
+  .byte $0f, $04, $20, $14
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
 
@@ -264,3 +267,22 @@ palettes:
   .byte %00111100 ;  *    *
   .byte %00011000 ;   *  *
   .byte %00000000 ;    **
+
+  ; Morran (09)
+  .byte %00111100 ;
+  .byte %01101010 ;
+  .byte %11111111 ;
+  .byte %11111110 ;
+  .byte %11100000 ;
+  .byte %11011111 ;
+  .byte %11111111 ;
+  .byte %11111111 ;
+
+  .byte %00101100 ;
+  .byte %01010100 ;
+  .byte %10000000 ;
+  .byte %00000000 ;
+  .byte %00011110 ;
+  .byte %00111110 ;
+  .byte %00000000 ;
+  .byte %00000000 ;

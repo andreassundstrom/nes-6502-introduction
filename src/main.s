@@ -1,5 +1,6 @@
 heart_1_pos_x = $02
 heart_1_pos_y = $03
+morran_direction = $04
 
 JOYPAD_1 = $20
 
@@ -30,12 +31,18 @@ JOYPAD_1 = $20
     jmp handle_y    ; no button is pressed
 
   move_right:
+    lda #%00000000
+    sta morran_direction
+
     ldx heart_1_pos_x
     inx 
     stx heart_1_pos_x
     jmp handle_y
 
   move_left:
+    lda #%01000000
+    sta morran_direction
+
     ldx heart_1_pos_x
     dex
     stx heart_1_pos_x
