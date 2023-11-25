@@ -22,8 +22,8 @@ Use a hash symbol (#) to the right of the instruction. This denotes the immediat
 ldx #10
 ```
 
-[!NOTE]
-Immediate mode can only be used to load a single byte
+> [!NOTE]
+> Immediate mode can only be used to load a single byte
 
 ## Implied addressing
 
