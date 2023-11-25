@@ -4,10 +4,9 @@
 .import Main
 
 ; Memory addresses
-heart_1_pos_x = $02
-heart_2_pos_x = $03
-
 JOYPAD_1 = $4016
+heart_1_pos_x = $02
+heart_1_pos_y = $03
 
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
@@ -108,7 +107,7 @@ nmi:
   stx $2003
 
   ; Moving heart
-  lda #$10    ; Set Y-pos
+  lda heart_1_pos_y    ; Set Y-pos
   sta $2004   ; Write Y-pos
 
   lda #$08    ; Set sprite (heart)
@@ -117,21 +116,8 @@ nmi:
   lda #$00    ; Set attributes
   sta $2004   ; Store attributes
   
-  lda $02     ; Load X from memory $01
-  sta $2004   ; Store X
-
-  ; Moving heart
-  lda #$20    ; Set Y-pos
-  sta $2004   ; Write Y-pos
-
-  lda #$08    ; Set sprite (heart)
-  sta $2004   ; Store sprite
-  
-  lda #$00    ; Set attributes
-  sta $2004   ; Store attributes
-  
-  lda $03     ; Load X from memory $01
-  sta $2004   ; Store X
+  lda heart_1_pos_x ; Load X from memory $01
+  sta $2004         ; Store X
 
   @loop:	
     lda hello, x 	; Load the text message into SPR-RAM

@@ -1,6 +1,5 @@
-heart_1_x_speed = $04
 heart_1_pos_x = $02
-heart_2_pos_x = $03
+heart_1_pos_y = $03
 
 JOYPAD_1 = $20
 
@@ -18,26 +17,55 @@ JOYPAD_1 = $20
   bne return
 
   ; Read
-  handle_right:
-    lda JOYPAD_1            ; Read JOYPAD_1 state
-    lsr a                   ; Rotate a right, placing first bit in C
+  handle_x:
+    lda JOYPAD_1    ; Read JOYPAD_1 state
+    and #%00000011  ; Reset all bits but the left and right
 
-    bcc set_0
-    bcs set_1
+    cmp #%00000001  ; Right button is pressed
+    beq move_right
+    
+    cmp #%00000010  ; Right button is pressed
+    beq move_left   ; Left button is pressed
 
-    set_1:
-      lda #1
-      jmp store
-    set_0:
-      lda #0
-      jmp store
-    store:
-      sta heart_1_x_speed
+    jmp handle_y    ; no button is pressed
 
-  increase_position:
-    lda heart_1_pos_x
-    adc heart_1_x_speed
-    sta heart_1_pos_x
+  move_right:
+    ldx heart_1_pos_x
+    inx 
+    stx heart_1_pos_x
+    jmp handle_y
+
+  move_left:
+    ldx heart_1_pos_x
+    dex
+    stx heart_1_pos_x
+    jmp handle_y
+
+  handle_y:
+    lda JOYPAD_1
+    and #%00001100
+
+    cmp #%00001000
+    beq move_up
+
+    cmp #%00000100
+    beq move_down
+
+    jmp return
+
+  move_up:
+    ldx heart_1_pos_y
+    dex
+    stx heart_1_pos_y
+
+    jmp return
+
+  move_down:
+    ldx heart_1_pos_y
+    inx
+    stx heart_1_pos_y
+
+    jmp return
 
   return:
     rts
