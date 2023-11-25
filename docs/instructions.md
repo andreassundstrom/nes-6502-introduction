@@ -26,6 +26,14 @@ Complete list with [instructions](https://www.masswerk.at/6502/6502_instruction_
 
 ## Branching
 
+| Instruction | Name                            | Condition |
+| ----------- | ------------------------------- | --------- |
+| BEQ         | Branch on result zero           | Z = 1     |
+| BNE         | Branch on result not zero equal | Z = 0     |
+| BPL         | Branch on result plus           | N = 0     |
+| BCC         | Branch on cary clear            | C = 0     |
+| BCS         | Branch on carry set             | C = 1     |
+
 `BPL`: **B**ranch on **PL**us result (N = 0).
 
 ```asm
@@ -76,7 +84,27 @@ Basic storing of the registries can be done with `ST{A|X|Y}`.
 
 `IN{X|Y}` and `DE{X|Y}` can be used to increment or decrement the value in the registries. This is useful for loops.
 
-## Compare memory and registry
+## Bitwise compare
+
+| Instruction | Description                  |
+| ----------- | ---------------------------- |
+| AND         | Bitwise AND with accumilator |
+| ORA         | Bitwise OR with accumilator  |
+
+Some examples:
+
+```asm
+; Bitwise AND
+lda #%11001100  ;1100 1100
+and #%11111111  ;1111 1111
+                ;1100 1100 stored in a
+
+; Bitwise OR
+lda #%11001100  ;1100 1100
+ora #%11111100  ;1111 1100
+                ;1111 1100 stored in a
+
+```
 
 ## Bitshiftoperations
 

@@ -1,3 +1,4 @@
+heart_1_x_speed = $04
 heart_1_pos_x = $02
 heart_2_pos_x = $03
 
@@ -14,22 +15,30 @@ JOYPAD_1 = $20
 
   cpx #$00
   ; if $01 == 0 goto return
-  bne @return
+  bne return
 
-  lda JOYPAD_1  ; Read JOYPAD_1 state
-  rol a         ; Rotate a left, placing first bit in C
+  ; Read
+  handle_right:
+    lda JOYPAD_1            ; Read JOYPAD_1 state
+    lsr a                   ; Rotate a right, placing first bit in C
 
-  bcc @return   ; If c is clear jump to return
+    bcc set_0
+    bcs set_1
 
-  ldx heart_1_pos_x
-  inx
-  stx heart_1_pos_x
+    set_1:
+      lda #1
+      jmp store
+    set_0:
+      lda #0
+      jmp store
+    store:
+      sta heart_1_x_speed
 
-  ldx heart_2_pos_x
-  dex
-  stx heart_2_pos_x
+  increase_position:
+    lda heart_1_pos_x
+    adc heart_1_x_speed
+    sta heart_1_pos_x
 
-
-  @return:
+  return:
     rts
 .endproc

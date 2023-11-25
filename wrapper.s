@@ -92,7 +92,7 @@ enable_rendering:
   sta $2001
 
   jsr InitApu
-  jsr Sound
+  ;jsr Sound
   
 forever:
   jsr Main
