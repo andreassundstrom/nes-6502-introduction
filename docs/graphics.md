@@ -1,5 +1,12 @@
 # Graphics
 
+| Name           | Description                                    |
+| -------------- | ---------------------------------------------- |
+| Nametable      | A background, references tiles in patterntable |
+| Palette        | A collection of colors used to render graphic  |
+| Patterntable   | Collection of sprites available in the PPU     |
+| System palette | The nes internal color palette                 |
+
 ## Color palette
 
 The NES can hold 4 background palettes and 4 sprite palettes, each with 4 colors. The 4 colors in the palette are picked from the NES available colors $00 - $3f. The first color in the palette is always transparent, so a palette can in reality only display 3 colors.
@@ -20,6 +27,22 @@ sta $2006 ; Send to PPU
 lda #$00    ; Value
 sta #$2007  ; Send to PPU write-channel
 ```
+
+## Nametables
+
+The ppu can store nametables that are 32x30 grid representations
+of a background. Each value corresponds to a sprite in the patterntable. A total of 960 bytes is required to render a complete background.
+
+## Attribute tables
+
+The attribute table picks the palette for the nametable. Every two bit-pairs represents the palette in a 2x2 grid. As an example, consider the attribute table value 00011011, this should be viewed as the four numbers 00 01 10 and 11. Where the values correspond to cells from left to right and top to bottom, illustrated in the table bellow.
+
+|     | A   | B   |
+| --- | --- | --- |
+| 1   | 0   | 1   |
+| 2   | 2   | 3   |
+
+Since every byte corresponds to two columns and two rows, only half as many attribute values are needed, or a grid consisting of 16x15 values.
 
 ## PPU internal addresses
 

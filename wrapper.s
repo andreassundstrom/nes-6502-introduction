@@ -85,11 +85,51 @@ load_palettes:
   cpx #$20
   bne @loop
 
+  ; Load background
+load_background:
+  lda $2002 ; reset PPU latch
+  
+  lda #$20  ; Write address $20 00 in ppu
+  sta $2006
+  lda #$00
+  sta $2006
+
+  ldx #$00
+  load_background_loop:
+      lda background, x
+      sta $2007
+      inx
+      cpx #$ff
+      bne load_background_loop
+  
+load_attribute:
+  lda $2002
+  lda #$23
+  sta $2006
+  lda #$C0
+  sta $2006
+  ldx #$00
+  load_attribute_loop:
+    lda attribute, x
+    sta $2007
+    inx
+    cpx #$7f
+    bne load_attribute_loop
+
 enable_rendering:
   lda #%10000000	; Enable NMI
   sta $2000
   lda #%00010000	; Enable Sprites
   sta $2001
+  
+  lda #%00011110 ; enable sprites, enable background
+  sta $2001
+
+  ; Disable scrolling at end of nmi
+  ; See https://taywee.github.io/NerdyNights/nerdynights/backgrounds.html
+  lda #$00
+  sta $2005
+  sta $2005
 
   jsr InitApu
   ;jsr Sound
@@ -130,7 +170,33 @@ nmi:
     ; in negative, zero and carry status registries
     cpx #$44 
     bne @loop ; Branch on result not zero, z = 0
-  rti
+    rti
+
+background:
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0B,$0B,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+
+
+
+attribute:
+  .byte %00000000, %00000100, %00000000, %00000000,%00000000, %00000000, %00000000, %00000000
 
 hello:
   ; y, tecken, ?, x
@@ -155,7 +221,7 @@ hello:
 palettes:
   ; Background Palette
   .byte $0f, $09, $19, $2a
-  .byte $0f, $00, $00, $00
+  .byte $0f, $05, $15, $25
   .byte $0f, $00, $00, $00
   .byte $0f, $00, $00, $00
 
@@ -284,3 +350,15 @@ palettes:
   .byte %00111110 ;
   .byte %00000000 ;
   .byte %00000000 ;
+
+  ; Color 1 ($0A)
+  .byte $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+
+  ; Color 2 ($0B)
+  .byte $00, $00, $00, $00, $00, $00, $00, $00
+  .byte $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+
+  ; Color 3 ($0C)
+  .byte $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
+  .byte $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff
