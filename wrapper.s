@@ -87,20 +87,40 @@ load_palettes:
 
   ; Load background
 load_background:
+
   lda $2002 ; reset PPU latch
-  
   lda #$20  ; Write address $20 00 in ppu
   sta $2006
   lda #$00
   sta $2006
 
   ldx #$00
-  load_background_loop:
-      lda background, x
+  load_background_loop_1:
+      lda background_1, x
       sta $2007
       inx
       cpx #$ff
-      bne load_background_loop
+      bne load_background_loop_1
+  
+  load_background_loop_2:
+      lda background_2, x
+      sta $2007
+      inx
+      cpx #$ff
+      bne load_background_loop_2
+  load_background_loop_3:
+      lda background_3, x
+      sta $2007
+      inx
+      cpx #$ff
+      bne load_background_loop_3
+
+  load_background_loop_4:
+      lda background_4, x
+      sta $2007
+      inx
+      cpx #$ff
+      bne load_background_loop_4
   
 load_attribute:
   lda $2002
@@ -113,7 +133,7 @@ load_attribute:
     lda attribute, x
     sta $2007
     inx
-    cpx #$7f
+    cpx #$40
     bne load_attribute_loop
 
 enable_rendering:
@@ -161,18 +181,18 @@ nmi:
   
   lda heart_1_pos_x ; Load X from memory $01
   sta $2004         ; Store X
-
+  
   @loop:	
     lda hello, x 	; Load the text message into SPR-RAM
     sta $2004
     inx
     ; Compare value in x to 44, store results
     ; in negative, zero and carry status registries
-    cpx #$44 
+    cpx #$3c
     bne @loop ; Branch on result not zero, z = 0
     rti
 
-background:
+background_1:
   .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
   .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
   .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
@@ -182,7 +202,17 @@ background:
   .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
   .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
   .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+background_2:
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
   
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+background_3:
   .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
   .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
   .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
@@ -193,29 +223,46 @@ background:
   .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
   .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
 
+background_4:
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
+  .byte $0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B,$0B
+  .byte $0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A,$0A
 
 
 attribute:
-  .byte %00000000, %00000100, %00000000, %00000000,%00000000, %00000000, %00000000, %00000000
+  .byte $55,$55,$55,$55,$55,$55,$55,$55
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $00,$00,$00,$00,$00,$00,$00,$00
+  .byte $55,$55,$55,$55,$55,$55,$55,$55
 
 hello:
-  ; y, tecken, ?, x
-  .byte $6c, $08, $00, $62 ; Heart
-  .byte $6c, $00, $00, $6c ; A
-  .byte $6c, $01, $00, $76 ; L
-  .byte $6c, $02, $00, $80 ; F
-  .byte $6c, $03, $00, $8A ; R
-  .byte $6c, $04, $00, $94 ; E
-  .byte $6c, $05, $00, $9E ; D
-  .byte $6c, $08, $00, $A8 ; Heart
+  ; y, tecken, attr, x
+  .byte $6c, $08, $00, $62 ; Heart    00 - 03
+  .byte $6c, $00, $00, $6c ; A        04 - 07
+  .byte $6c, $01, $00, $76 ; L        08 - 0b
+  .byte $6c, $02, $00, $80 ; F        0c - 0f
+  .byte $6c, $03, $00, $8A ; R        10
+  .byte $6c, $04, $00, $94 ; E        14
+  .byte $6c, $05, $00, $9E ; D        18
+  .byte $6c, $08, $00, $A8 ; Heart    1c
 
-  .byte $76, $08, $00, $62 ; Heart
-  .byte $76, $06, $00, $6c ; S
-  .byte $76, $04, $00, $76 ; E
-  .byte $76, $01, $00, $80 ; L
-  .byte $76, $07, $00, $8A ; M
-  .byte $76, $00, $00, $94 ; A
-  .byte $76, $08, $00, $9E ; Heart
+  .byte $76, $08, $00, $62 ; Heart    20
+  .byte $76, $06, $00, $6c ; S        24
+  .byte $76, $04, $00, $76 ; E        28
+  .byte $76, $01, $00, $80 ; L        2c
+  .byte $76, $07, $00, $8A ; M        30
+  .byte $76, $00, $00, $94 ; A        34
+  .byte $76, $08, $00, $9E ; Heart    38 - 3B
 
 
 palettes:
