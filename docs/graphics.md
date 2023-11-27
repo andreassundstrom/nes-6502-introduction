@@ -35,12 +35,12 @@ of a background. Each value corresponds to a sprite in the patterntable. A total
 
 ## Attribute tables
 
-The attribute table picks the palette for the nametable. Every two bit-pairs represents the palette in a 2x2 grid. As an example, consider the attribute table value 00011011, this should be viewed as the four numbers 00 01 10 and 11. Where the values correspond to cells from left to right and top to bottom, illustrated in the table bellow.
+The attribute table picks the palette for the nametable. Every two bit-pairs represents the palette in a 2x2 grid. As an example, consider the attribute table value 00011011, this should be viewed as the four numbers 00 01 10 and 11. Where the values correspond to cells from right to left and bottom to top, illustrated in the table bellow.
 
 |     | A   | B   |
 | --- | --- | --- |
-| 1   | 0   | 1   |
-| 2   | 2   | 3   |
+| 1   | 3   | 2   |
+| 2   | 1   | 0   |
 
 Since every byte corresponds to two columns and two rows, only half as many attribute values are needed, or a grid consisting of 16x15 values.
 

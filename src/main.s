@@ -1,7 +1,7 @@
 heart_1_pos_x = $02
 heart_1_pos_y = $03
 morran_direction = $04
-
+morran_sprite = $05
 JOYPAD_1 = $20
 
 .export Main
