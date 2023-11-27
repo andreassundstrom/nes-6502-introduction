@@ -3,7 +3,7 @@ morran_pos_x = $02
 morran_pos_y = $03
 morran_direction = $04
 morran_sprite = $05
-score = $10
+score_value = $10
 heart_pos_x = $0A
 heart_pos_y = $0B
 
@@ -11,7 +11,7 @@ heart_pos_y = $0B
   
   ; reset score
   lda #0
-  sta score
+  sta score_value
 
   ; Set position
   lda #20

@@ -11,6 +11,7 @@ morran_pos_y = $03
 morran_direction = $04
 morran_sprite = $05
 collision = $0C
+score_value = $10
 
 ; Heart
 heart_pos_x = $0A
@@ -192,6 +193,8 @@ nmi:
   
   continue_collision: sta $2004
   
+
+
   lda #1
   sta $2004
   lda heart_pos_x
@@ -225,13 +228,41 @@ nmi:
   lda morran_pos_x ; Load X from memory $01
   sta $2004         ; Store X
   
+  ldx #$00
+  score_loop:
+    lda score, x
+    sta $2004
+    inx
+    cpx #$18
+    bne score_loop
+
+  ; ldx #16
+  ; sta $2004
+  ; lda score_value
+  ; cpx #0
+  ; beq draw_score_0
+  ; lda #0
+  ; draw_score_0: 
+  ; lda #$23
+  ; jmp return_draw_score
+  
+  ; return_draw_score:
+  ; sta $2004
+  
+  ; lda #$00
+  ; sta $2004
+  ; lda #240
+  ; sta $2004
+
+
+  ldx #0
   @loop:	
     lda hello, x 	; Load the text message into SPR-RAM
     sta $2004
     inx
     ; Compare value in x to 44, store results
     ; in negative, zero and carry status registries
-    cpx #$3c
+    cpx #$18
     bne @loop ; Branch on result not zero, z = 0
     rti
 
@@ -288,25 +319,22 @@ attribute:
   .byte $00,$00,$00,$00,$00,$00,$00,$00
   .byte $55,$55,$55,$55,$55,$55,$55,$55
 
+score:
+  .byte 16, $12, $00, 200 ; S
+  .byte 16, $02, $00, 208 ; C
+  .byte 16, $0E, $00, 216 ; O
+  .byte 16, $11, $00, 224 ; R
+  .byte 16, $04, $00, 232 ; E
+  .byte 16, $23, $00, 240 ; 0
+
 hello:
   ; y, tecken, attr, x
-  .byte $6c, $24, $01, $62 ; Heart    00 - 03
   .byte $6c, $00, $00, $6c ; A        04 - 07
   .byte $6c, $0B, $00, $76 ; L        08 - 0b
   .byte $6c, $05, $00, $80 ; F        0c - 0f
   .byte $6c, $11, $00, $8A ; R        10
   .byte $6c, $04, $00, $94 ; E        14
   .byte $6c, $03, $00, $9E ; D        18
-  .byte $6c, $24, $01, $A8 ; Heart    1c
-
-  .byte $76, $24, $01, $62 ; Heart    20
-  .byte $76, $12, $00, $6c ; S        24
-  .byte $76, $04, $00, $76 ; E        28
-  .byte $76, $0B, $00, $80 ; L        2c
-  .byte $76, $0C, $00, $8A ; M        30
-  .byte $76, $00, $00, $94 ; A        34
-  .byte $76, $24, $01, $9E ; Heart    38 - 3B
-
 
 palettes:
   .incbin "src/graphics/palette.dat"
