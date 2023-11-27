@@ -1,4 +1,4 @@
 {
   "executable": "C:\\cc65\\bin\\cl65",
-  "params": "--verbose --target nes -o bin/nes-introduction.rom src/main.s src/sound.s src/controller.s"
+  "params": "--verbose --target nes -o bin/nes-introduction.rom src/main.s src/sound.s src/controller.s src/init.s"
 }

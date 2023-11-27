@@ -84,6 +84,16 @@ Basic storing of the registries can be done with `ST{A|X|Y}`.
 
 `IN{X|Y}` and `DE{X|Y}` can be used to increment or decrement the value in the registries. This is useful for loops.
 
+## Compare
+
+| Instruuction | Description              |
+| ------------ | ------------------------ |
+| cmp          | Compare with accumulator |
+| cmX          | Compare with X           |
+| cmy          | Compare with y           |
+
+Compare a,x or y to a value
+
 ## Bitwise compare
 
 | Instruction | Description                  |

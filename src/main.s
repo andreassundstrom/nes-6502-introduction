@@ -1,8 +1,14 @@
-heart_1_pos_x = $02
-heart_1_pos_y = $03
+morran_pos_x = $02
+morran_pos_y = $03
 morran_direction = $04
 morran_sprite = $05
+
+heart_pos_x = $0A
+heart_pos_y = $0b
+
 JOYPAD_1 = $20
+collision = $0C
+collision_temp = $0D
 
 .export Main
 .segment "CODE"
@@ -34,18 +40,18 @@ JOYPAD_1 = $20
     lda #%00000000
     sta morran_direction
 
-    ldx heart_1_pos_x
+    ldx morran_pos_x
     inx 
-    stx heart_1_pos_x
+    stx morran_pos_x
     jmp handle_y
 
   move_left:
     lda #%01000000
     sta morran_direction
 
-    ldx heart_1_pos_x
+    ldx morran_pos_x
     dex
-    stx heart_1_pos_x
+    stx morran_pos_x
     jmp handle_y
 
   handle_y:
@@ -61,19 +67,74 @@ JOYPAD_1 = $20
     jmp return
 
   move_up:
-    ldx heart_1_pos_y
+    ldx morran_pos_y
     dex
-    stx heart_1_pos_y
+    stx morran_pos_y
 
     jmp return
 
   move_down:
-    ldx heart_1_pos_y
+    ldx morran_pos_y
     inx
-    stx heart_1_pos_y
+    stx morran_pos_y
 
     jmp return
 
   return:
+    jsr check_collision
     rts
+.endproc
+
+.proc check_collision
+  lda #0
+  sta collision_temp
+
+  heart_is_lower:
+    lda morran_pos_x
+    adc #$08
+    cmp heart_pos_x
+    bcc heart_add_eight_is_lower
+    lda #%00001000
+    sta collision_temp
+
+  heart_add_eight_is_lower:
+    lda morran_pos_x
+    sbc #$08
+    cmp heart_pos_x
+    bcs heart_y_is_higher
+    lda collision_temp
+    ora #%00000100
+    sta collision_temp
+  
+  heart_y_is_higher:
+    lda morran_pos_y
+    adc #$08
+    cmp heart_pos_y
+    bcc heart_y_add_eight_is_lower
+    lda collision_temp
+    ora #%00000010
+    sta collision_temp
+  
+  heart_y_add_eight_is_lower:
+    lda morran_pos_y
+    sbc #$08
+    cmp heart_pos_y
+    bcs store_value
+    lda collision_temp
+    ora #%00000001
+    sta collision_temp
+  
+  store_value:
+    lda collision_temp
+    cmp #$0f
+    beq set_collision_one
+    set_collision_zero:
+      lda #0
+      jmp store_final_collision
+    set_collision_one:
+      lda #1
+    store_final_collision:
+      sta collision
+    
+  rts
 .endproc

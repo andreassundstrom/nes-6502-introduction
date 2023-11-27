@@ -1,15 +1,20 @@
 .import Sound
 .import ReadController
 .import InitApu
+.import Init
 .import Main
 
 ; Memory addresses
 JOYPAD_1 = $4016
-heart_1_pos_x = $02
-heart_1_pos_y = $03
+morran_pos_x = $02
+morran_pos_y = $03
 morran_direction = $04
 morran_sprite = $05
+collision = $0C
 
+; Heart
+heart_pos_x = $0A
+heart_pos_y = $0B
 
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
@@ -154,6 +159,7 @@ enable_rendering:
   sta $2005
 
   jsr InitApu
+  jsr Init
   ;jsr Sound
   
 forever:
@@ -169,12 +175,34 @@ nmi:
   ldx #$00 	; Set SPR-RAM address to 0
   stx $2003
 
-  ; Moving heart
-  lda heart_1_pos_y    ; Set Y-pos
+  ; Debugger
+  lda heart_pos_y
+  sta $2004
+
+  lda collision
+  cmp #$00
+  beq set_0
+  cmp #$01
+  beq set_1
+  
+  set_0: lda #$23
+    jmp continue_collision
+  set_1: lda #$24
+    jmp continue_collision
+  
+  continue_collision: sta $2004
+  
+  lda #1
+  sta $2004
+  lda heart_pos_x
+  sta $2004
+
+  ; Morran
+  lda morran_pos_y    ; Set Y-pos
   sta $2004   ; Write Y-pos
 
 
-  lda heart_1_pos_x ; Display animation depending on if x is even or not
+  lda morran_pos_x ; Display animation depending on if x is even or not
   lsr a
   lsr a
   clc
@@ -194,7 +222,7 @@ nmi:
 
   sta $2004   ; Store attributes
   
-  lda heart_1_pos_x ; Load X from memory $01
+  lda morran_pos_x ; Load X from memory $01
   sta $2004         ; Store X
   
   @loop:	
@@ -209,9 +237,9 @@ nmi:
 
 background_1:
   .byte $26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26
-  .byte $25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25
-  .byte $26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26
-  .byte $25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$26,$26,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25
+  .byte $25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$30,$31,$31,$31,$31,$31,$31,$31
+  .byte $26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$30,$31,$31,$31,$31,$31,$31,$31
+  .byte $25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$26,$26,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$40,$41,$41,$41,$41,$41,$41,$41
   
   .byte $26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26
   .byte $25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25,$25
