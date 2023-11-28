@@ -142,6 +142,7 @@ collision_temp = $0D
     sta heart_pos_x
 
     lda score_value
+    clc
     adc #1
     sta score_value
 
