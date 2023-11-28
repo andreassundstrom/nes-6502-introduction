@@ -6,6 +6,8 @@ morran_sprite = $05
 heart_pos_x = $0A
 heart_pos_y = $0b
 
+score_value = $10
+
 JOYPAD_1 = $20
 collision = $0C
 collision_temp = $0D
@@ -127,14 +129,21 @@ collision_temp = $0D
   store_value:
     lda collision_temp
     cmp #$0f
-    beq set_collision_one
-    set_collision_zero:
-      lda #0
-      jmp store_final_collision
-    set_collision_one:
-      lda #1
-    store_final_collision:
-      sta collision
-    
-  rts
+    beq handle_collision
+    rts
+  
+  handle_collision:
+    lda heart_pos_y
+    adc #64
+    sta heart_pos_y
+
+    lda heart_pos_x
+    adc #80
+    sta heart_pos_x
+
+    lda score_value
+    adc #1
+    sta score_value
+
+    rts
 .endproc

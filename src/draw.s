@@ -1,9 +1,13 @@
 .export DrawMorran
 .export DrawScore
+.export DrawHeart
 
 morran_pos_x = $02
 morran_pos_y = $03
 morran_direction = $04
+
+heart_pos_x = $0A
+heart_pos_y = $0B
 
 score_value = $10
 
@@ -108,6 +112,18 @@ score_value = $10
 
     rts
 
+.endproc
+
+.proc DrawHeart
+  lda heart_pos_y
+  sta $2004
+  lda #$24
+  sta $2004
+  lda #1
+  sta $2004
+  lda heart_pos_x
+  sta $2004
+  rts
 .endproc
 
 score:

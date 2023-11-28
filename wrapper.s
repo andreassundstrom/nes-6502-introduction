@@ -1,5 +1,6 @@
 .import DrawMorran
 .import DrawScore
+.import DrawHeart
 .import Sound
 .import ReadController
 .import InitApu
@@ -9,11 +10,6 @@
 ; Memory addresses
 JOYPAD_1 = $4016
 collision = $0C
-
-
-; Heart
-heart_pos_x = $0A
-heart_pos_y = $0B
 
 .segment "HEADER"
   ; .byte "NES", $1A      ; iNES header identifier
@@ -174,42 +170,13 @@ nmi:
   ldx #$00 	; Set SPR-RAM address to 0
   stx $2003
 
-  ; Debugger
-  lda heart_pos_y
-  sta $2004
-
-  lda collision
-  cmp #$00
-  beq set_0
-  cmp #$01
-  beq set_1
-  
-  set_0: lda #$23
-    jmp continue_collision
-  set_1: lda #$24
-    jmp continue_collision
-  
-  continue_collision: sta $2004
-  
-  lda #1
-  sta $2004
-  lda heart_pos_x
-  sta $2004
+  jsr DrawHeart
 
   jsr DrawMorran
   
   jsr DrawScore
 
-  ldx #0
-  @loop:	
-    lda hello, x 	; Load the text message into SPR-RAM
-    sta $2004
-    inx
-    ; Compare value in x to 44, store results
-    ; in negative, zero and carry status registries
-    cpx #$18
-    bne @loop ; Branch on result not zero, z = 0
-    rti
+  rti
 
 background_1:
   .byte $26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26,$26
@@ -263,15 +230,6 @@ attribute:
   .byte $00,$00,$00,$00,$00,$00,$00,$00
   .byte $00,$00,$00,$00,$00,$00,$00,$00
   .byte $55,$55,$55,$55,$55,$55,$55,$55
-
-hello:
-  ; y, tecken, attr, x
-  .byte $6c, $00, $00, $6c ; A        04 - 07
-  .byte $6c, $0B, $00, $76 ; L        08 - 0b
-  .byte $6c, $05, $00, $80 ; F        0c - 0f
-  .byte $6c, $11, $00, $8A ; R        10
-  .byte $6c, $04, $00, $94 ; E        14
-  .byte $6c, $03, $00, $9E ; D        18
 
 palettes:
   .incbin "src/graphics/palette.dat"
