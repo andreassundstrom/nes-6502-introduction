@@ -93,6 +93,7 @@ collision_temp = $0D
 
   heart_is_lower:
     lda morran_pos_x
+    clc
     adc #$08
     cmp heart_pos_x
     bcc heart_add_eight_is_lower
@@ -110,6 +111,7 @@ collision_temp = $0D
   
   heart_y_is_higher:
     lda morran_pos_y
+    clc
     adc #$08
     cmp heart_pos_y
     bcc heart_y_add_eight_is_lower
