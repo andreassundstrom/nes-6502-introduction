@@ -1,3 +1,5 @@
+.import DrawMorran
+.import DrawScore
 .import Sound
 .import ReadController
 .import InitApu
@@ -6,12 +8,8 @@
 
 ; Memory addresses
 JOYPAD_1 = $4016
-morran_pos_x = $02
-morran_pos_y = $03
-morran_direction = $04
-morran_sprite = $05
 collision = $0C
-score_value = $10
+
 
 ; Heart
 heart_pos_x = $0A
@@ -193,67 +191,14 @@ nmi:
   
   continue_collision: sta $2004
   
-
-
   lda #1
   sta $2004
   lda heart_pos_x
   sta $2004
 
-  ; Morran
-  lda morran_pos_y    ; Set Y-pos
-  sta $2004   ; Write Y-pos
-
-
-  lda morran_pos_x ; Display animation depending on if x is even or not
-  lsr a
-  lsr a
-  clc
-  lsr a
-  bcc set_step_2
-  set_step_1:
-    lda #$29    ; Set sprite (morran)
-    jmp store_step
-  set_step_2:
-    lda #$2A    ; Set sprite (morran)
-    jmp store_step
-  store_step:
-    sta $2004   ; Store sprite
+  jsr DrawMorran
   
-  lda #%00000001        ; Set attributes
-  ora morran_direction  ; V-flip
-
-  sta $2004   ; Store attributes
-  
-  lda morran_pos_x ; Load X from memory $01
-  sta $2004         ; Store X
-  
-  ldx #$00
-  score_loop:
-    lda score, x
-    sta $2004
-    inx
-    cpx #$18
-    bne score_loop
-
-  ; ldx #16
-  ; sta $2004
-  ; lda score_value
-  ; cpx #0
-  ; beq draw_score_0
-  ; lda #0
-  ; draw_score_0: 
-  ; lda #$23
-  ; jmp return_draw_score
-  
-  ; return_draw_score:
-  ; sta $2004
-  
-  ; lda #$00
-  ; sta $2004
-  ; lda #240
-  ; sta $2004
-
+  jsr DrawScore
 
   ldx #0
   @loop:	
@@ -318,14 +263,6 @@ attribute:
   .byte $00,$00,$00,$00,$00,$00,$00,$00
   .byte $00,$00,$00,$00,$00,$00,$00,$00
   .byte $55,$55,$55,$55,$55,$55,$55,$55
-
-score:
-  .byte 16, $12, $00, 200 ; S
-  .byte 16, $02, $00, 208 ; C
-  .byte 16, $0E, $00, 216 ; O
-  .byte 16, $11, $00, 224 ; R
-  .byte 16, $04, $00, 232 ; E
-  .byte 16, $23, $00, 240 ; 0
 
 hello:
   ; y, tecken, attr, x
